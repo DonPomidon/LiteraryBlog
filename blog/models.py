@@ -3,28 +3,25 @@ from django.contrib.auth.models import User
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=250, unique=True)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=250, unique=True)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    body = models.TextField()
+    description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     rating = models.FloatField(default=0.0)
-    slug = models.SlugField(max_length=250)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_added_book')
     publish = models.DateTimeField(auto_now_add=True)
 
