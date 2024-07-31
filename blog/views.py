@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import Book
+from django.http import Http404
 
-# Create your views here.
+
+def book_list(request):
+    books = Book.publish.all()
+    return render(request,'blog/books/list.html', {'books': books}),
+
+
+def book_detail(request, id):
+    book = get_object_or_404(Book, id=id)
+    return render(request, 'blog/books/detail.html', {'book': book})
+
+
