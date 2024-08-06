@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "blog/base.html" %}
 
-</body>
-</html>
+{% block title %}My blog{% endblock %}
+
+{% block content %}
+    <h1>My Blog</h1>
+    {% for book in books %}
+        <h2>
+            <a href="{% url 'blog:book_detail' book.id %}">
+            {{ book.title }}
+            </a>
+        </h2>
+        <p class="author">
+            Added by: {{ book.added_by }}
+        </p>
+        <p class="date">
+            Published: {{ book.publish }}
+        </p>
+        {{ book.body|truncatewords:30|linebreaks }}
+    {% endfor %}
+{% endblock %}

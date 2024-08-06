@@ -4,8 +4,8 @@ from django.http import Http404
 
 
 def book_list(request):
-    books = Book.publish.all()
-    return render(request,'blog/books/list.html', {'books': books}),
+    books = Book.objects.all()
+    return render(request, 'blog/books/list.html', {'books': books})
 
 
 def book_detail(request, id):

@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'blog/base.html' %}
 
-</body>
-</html>
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ book.title }}</h1>
+    <p class="author">
+        Author: {{ book.author }}
+    </p>
+    <p class="category">
+        Category: {{ book.category }}
+    </p>
+    <p class="description">
+        Description: {{ book.description }}
+    </p>
+    <p class="rating">
+        Rating: {{ book.rating }}
+    </p>
+    {{ book.body|linebreaks }}
+{% endblock %}
