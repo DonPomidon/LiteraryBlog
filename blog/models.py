@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -18,6 +19,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=250, unique_for_date='publish')
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -41,6 +43,13 @@ class Book(models.Model):
         else:
             self.rating = 0.0
         self.save()
+
+    def get_absolute_url(self):
+        return reverse('blog:book_detail',
+                       args=[self.publish.year,
+                             self.publish.month,
+                             self.publish.day,
+                             self.slug])
 
 
 class Review(models.Model):

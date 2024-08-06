@@ -4,11 +4,12 @@ from .models import Author, Category, Book, Review
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'description', 'category', 'rating', 'added_by', 'publish']
+    list_display = ['title', 'slug', 'author', 'description', 'category', 'rating', 'added_by', 'publish']
     list_filter = ['author', 'category', 'rating', 'added_by', 'publish']
     search_fields = ['title', 'description']
     raw_id_fields = ['author']
     ordering = ['publish']
+    prepopulated_fields = {'slug': ('title', )}
 
 
 @admin.register(Review)
