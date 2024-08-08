@@ -14,8 +14,9 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['book', 'user', 'comment', 'rating']
+    list_display = ['book', 'user', 'comment', 'rating', 'created']
     list_filter = ['user', 'rating']
+    search_fields = ['user', 'book', 'comment']
 
 
 @admin.register(Author)

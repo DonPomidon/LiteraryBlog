@@ -57,9 +57,16 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField()
     rating = models.FloatField(default=0.0)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created']
+        indexes = [
+            models.Index(fields=['created']),
+        ]
 
     def __str__(self):
-        return f'{self.user.username} - {self.book.title}'
+        return f'Review by {self.user.username} - {self.book.title}'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
