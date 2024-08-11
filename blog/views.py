@@ -14,6 +14,7 @@ def book_review(request, book_id):
     form = ReviewForm(data=request.POST)
     if form.is_valid():
         review = form.save(commit=False)
+        review.user = request.user
         review.book = book
         review.save()
     return render(request, 'blog/books/review.html',
@@ -32,11 +33,23 @@ def book_list(request):
         books = paginator.page(1)
     except EmptyPage:
         books = paginator.page(paginator.num_pages)
-    return render(request, 'blog/books/list.html', {'books': books})
+    return render(request,
+    'blog/books/list.html',
+        {'books': books})
 
 
 def book_detail(request, year, month, day, slug):
-    book = get_object_or_404(Book, publish__year=year, publish__month=month, publish__day=day, slug=slug)
-    return render(request, 'blog/books/detail.html', {'book': book})
+    book = get_object_or_404(Book,
+                             publish__year=year,
+                             publish__month=month,
+                             publish__day=day,
+                             slug=slug)
+    reviews = book.reviews.all()
+    form = ReviewForm()
+    return render(request,
+    'blog/books/detail.html',
+        {'book': book,
+                'reviews': reviews,
+                'form': form})
 
 

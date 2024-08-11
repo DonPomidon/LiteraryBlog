@@ -1,0 +1,7 @@
+<h2>Add a new review</h2>
+
+<form action="{% url "blog:book_review" book.id %}" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Add review"></p>
+</form>

@@ -17,4 +17,21 @@
         Rating: {{ book.rating }}
     </p>
     {{ book.body|linebreaks }}
+    {% with reviews.count as total_reviews %}
+        <h2>
+            {{ total_reviews }} review{{ total_reviews|pluralize }}
+        </h2>
+    {% endwith %}
+    {% for review in reviews %}
+        <div class="review">
+            <p class="info">
+                {{ review.user.username }}
+                <p>{{ review.created }}</p>
+            </p>
+            {{ review.comment|linebreaks }}
+        </div>
+    {% empty %}
+        <p>There are no reviews</p>
+    {% endfor %}
+    {% include 'blog/books/includes/review_form.html' %}
 {% endblock %}
