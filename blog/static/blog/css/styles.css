@@ -1,0 +1,116 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 15px 20px; /* Уменьшен padding для тонкого хедера */
+    text-align: center;
+    border-bottom: #77ab59 3px solid;
+}
+
+header #branding {
+    float: left;
+}
+
+header #branding h1 {
+    margin: 0;
+}
+
+header nav {
+    margin-top: 5px; /* Уменьшен отступ */
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+header .highlight, header .current a {
+    color: #77ab59;
+    font-weight: bold;
+}
+
+.blog_header {
+    color: white;
+    text-decoration: none;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.content {
+    padding: 60px 20px 60px;
+    background: #fff;
+    margin-top: 0;
+    margin-bottom: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.book-list li {
+    list-style: none;
+    padding: 20px;
+    border-bottom: 1px #ccc solid;
+}
+
+.book-detail {
+    margin-bottom: 30px;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 5px;
+    background: #333;
+    color: #fff;
+    text-decoration: none;
+}
+
+.pagination .current {
+    font-weight: bold;
+    background: #77ab59;
+    padding: 10px 20px;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 20px;
+    border-top: #77ab59 3px solid;
+}

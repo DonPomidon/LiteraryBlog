@@ -3,24 +3,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}Title</title>
-    <link href="{% static "css/blog.css" %}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Literary Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/styles.css' %}">
 </head>
 <body>
-    <div id="navbar">
-        {% block navbar %}
-        {% endblock %}
+    <header>
+        <div class="container">
+            <h1><a class="blog_header" href="{% url 'blog:book_list' %}">Literary Blog by Admin</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'blog:book_list' %}">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
     </div>
-    <div id="content">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <div id="sidebar">
-        <h2>Blog</h2>
-        <p>This is my blog</p>
-    </div>
-    <div id="footer">
-        <p>This is footer</p>
-    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 My Blog. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
