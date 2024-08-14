@@ -7,30 +7,22 @@ html, body {
     background-color: #f4f4f4;
 }
 
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
 header {
     background: #333;
     color: #fff;
-    padding: 15px 20px; /* Уменьшен padding для тонкого хедера */
-    text-align: center;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-bottom: #77ab59 3px solid;
 }
 
 header #branding {
-    float: left;
+    flex: 1;
 }
 
 header #branding h1 {
     margin: 0;
-}
-
-header nav {
-    margin-top: 5px; /* Уменьшен отступ */
 }
 
 header nav ul {
@@ -57,6 +49,23 @@ header .highlight, header .current a {
     font-weight: bold;
 }
 
+.auth-links {
+    display: flex;
+    align-items: center;
+}
+
+.auth-links a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.auth-links a:hover {
+    color: #77ab59;
+}
+
 .blog_header {
     color: white;
     text-decoration: none;
@@ -75,36 +84,6 @@ header .highlight, header .current a {
     margin-bottom: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-}
-
-.book-list li {
-    list-style: none;
-    padding: 20px;
-    border-bottom: 1px #ccc solid;
-}
-
-.book-detail {
-    margin-bottom: 30px;
-}
-
-.pagination {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.pagination a {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 0 5px;
-    background: #333;
-    color: #fff;
-    text-decoration: none;
-}
-
-.pagination .current {
-    font-weight: bold;
-    background: #77ab59;
-    padding: 10px 20px;
 }
 
 footer {
