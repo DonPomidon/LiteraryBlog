@@ -1,6 +1,5 @@
 from django import forms
-from .models import Review, CustomUser
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from .models import Review, Book, Author, Category
 
 
 class ReviewForm(forms.ModelForm):
@@ -9,31 +8,27 @@ class ReviewForm(forms.ModelForm):
         fields = ['comment', 'rating']
 
 
-class CreateCustomUser(UserCreationForm):
+class AddBookForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
-        fields = ['username', 'age', 'email', 'gender']
+        model = Book
+        fields = ['title', 'author', 'description', 'category']
 
 
-class ChangeCustomUser(UserChangeForm):
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'age', 'email', 'gender']
+class BookFilterForm(forms.Form):
+    author = forms.ModelChoiceField(queryset=Author.objects.all(), required=False, label='Author')
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False, label='Category')
+    min_rating = forms.FloatField(
+        required=False,
+        label='Min Rating',
+        widget=forms.NumberInput(attrs={'step': '0.1'})
+    )
+    max_rating = forms.FloatField(
+        required=False,
+        label='Max Rating',
+        widget=forms.NumberInput(attrs={'step': '0.1'})
+    )
 
 
-class LoginCustomUser(AuthenticationForm):
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'password']
 
 
-class RegisterCustomUser(UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super(UserCreationForm, self).__init__(*args, **kwargs)
-        self.fields['username'].help_text = ""
-        self.fields['password1'].help_text = ""
-        self.fields['password2'].help_text = ""
 
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'password', 'age', 'gender']

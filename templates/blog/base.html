@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,15 +17,18 @@
                     <li><a href="{% url 'blog:book_list' %}">Home</a></li>
                     <li><a href="{% url 'blog:blog_about' %}">About</a></li>
                     <li><a href="{% url 'blog:blog_contacts' %}">Contact</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'blog:book_add' %}">Add new book</a></li>
+                    {% endif %}
                 </ul>
             </nav>
             <div class="auth-links">
                 {% if user.is_authenticated %}
                     <div>Welcome, {{ user.username }}</div>
-                    <a href="{% url 'blog:logout' %}">Logout</a>
+                    <a href="{% url 'accounts:logout' %}">Logout</a>
                 {% else %}
-                    <a href="{% url 'blog:login' %}">Login</a>
-                    <a href="{% url 'blog:register' %}">Sign Up</a>
+                    <a href="{% url 'accounts:login' %}">Login</a>
+                    <a href="{% url 'accounts:register' %}">Sign Up</a>
                 {% endif %}
             </div>
         </div>

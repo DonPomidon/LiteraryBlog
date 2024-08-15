@@ -1,5 +1,0 @@
-<form action="{% url 'blog:book_review' book.id %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Review</button>
-</form>
