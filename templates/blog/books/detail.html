@@ -21,6 +21,10 @@
                     <p><strong>{{ review.user.username }}</strong> ({{ review.created|date:"F j, Y" }})</p>
                     <p>{{ review.comment|linebreaks }}</p>
                     <p>Rating: {{ review.rating }}</p>
+
+                    {% if user == review.user %}
+                        <a href="{% url 'blog:edit_review' review.id %}">Edit</a>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}

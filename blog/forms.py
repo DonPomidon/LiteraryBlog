@@ -8,6 +8,12 @@ class ReviewForm(forms.ModelForm):
         fields = ['comment', 'rating']
 
 
+class EditReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating']
+
+
 class AddBookForm(forms.ModelForm):
     class Meta:
         model = Book

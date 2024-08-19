@@ -6,22 +6,28 @@
     <div class="container">
         <h1>Books List</h1>
 
-        <form method="get" class="filter-form">
-            <div class="filter-group">
-                <div class="filter-item">
-                    {{ form.author.label_tag }} {{ form.author }}
+        <form method="get" class="filter-form mb-4">
+            <div class="form-row">
+                <div class="form-group col-md-3 mb-2">
+                    {{ form.author.label_tag }}
+                    {{ form.author }}
                 </div>
-                <div class="filter-item">
-                    {{ form.category.label_tag }} {{ form.category }}
+                <div class="form-group col-md-3 mb-2">
+                    {{ form.category.label_tag }}
+                    {{ form.category }}
                 </div>
-                <div class="filter-item">
-                    {{ form.min_rating.label_tag }} {{ form.min_rating }}
+                <div class="form-group col-md-3 mb-2">
+                    {{ form.min_rating.label_tag }}
+                    {{ form.min_rating }}
                 </div>
-                <div class="filter-item">
-                    {{ form.max_rating.label_tag }} {{ form.max_rating }}
+                <div class="form-group col-md-3 mb-2">
+                    {{ form.max_rating.label_tag }}
+                    {{ form.max_rating }}
                 </div>
-                <div class="filter-item">
-                    <button type="submit" class="btn">Застосувати фільтр</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 text-right">
+                    <button type="submit" class="btn btn-primary">Apply filter</button>
                 </div>
             </div>
         </form>

@@ -1,6 +1,9 @@
 from django.db import models
 from django.urls import reverse
 from accounts.models import CustomUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
@@ -56,8 +59,9 @@ class Review(models.Model):
     book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     comment = models.TextField()
-    rating = models.FloatField(default=0, max_length=2)
+    rating = models.FloatField(default=0, validators=[MinValueValidator(0.0), MaxValueValidator(10.0)])
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['created']
@@ -69,8 +73,10 @@ class Review(models.Model):
         return f'Review by {self.user.username} - {self.book.title}'
 
     def save(self, *args, **kwargs):
+        self.updated = timezone.now()
         super().save(*args, **kwargs)
         self.book.update_rating()
+
 
 
 

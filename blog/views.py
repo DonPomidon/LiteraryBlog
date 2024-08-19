@@ -1,10 +1,31 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
-from .models import Book
+from .models import Book, Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import ReviewForm, AddBookForm, BookFilterForm
+from .forms import ReviewForm, AddBookForm, BookFilterForm, EditReviewForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+
+
+def edit_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id, user=request.user)
+
+    if request.method == 'POST':
+        form = EditReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:book_detail', year=review.book.publish.year,
+                            month=review.book.publish.month,
+                            day=review.book.publish.day,
+                            slug=review.book.slug)
+    else:
+        form = EditReviewForm(instance=review)
+
+    return render(request, 'blog/books/edit_reviews.html', {'form': form})
+
+
+
+
 
 
 def blog_about(request):
