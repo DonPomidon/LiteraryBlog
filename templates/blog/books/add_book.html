@@ -5,7 +5,38 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Confirm">
+
+        <div class="form-group">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+
+        <div class="form-group">
+            {{ form.slug.label_tag }}
+            {{ form.slug }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.author.label }} / New Author:</label><br>
+            <div class="d-flex">
+                {{ form.author }}
+                {{ form.new_author }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.category.label }} / New Category:</label><br>
+            <div class="d-flex">
+                {{ form.category }}
+                {{ form.new_category }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+        </div>
+
+        <input type="submit" value="Confirm" class="btn btn-primary">
     </form>
 {% endblock %}

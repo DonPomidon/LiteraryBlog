@@ -15,9 +15,31 @@ class EditReviewForm(forms.ModelForm):
 
 
 class AddBookForm(forms.ModelForm):
+    new_author = forms.CharField(max_length=100, required=False, label="New Author")
+    new_category = forms.CharField(max_length=100, required=False, label="New Category")
+
     class Meta:
         model = Book
-        fields = ['title', 'author', 'description', 'category']
+        fields = ['title', 'author', 'description', 'category', 'new_author', 'new_category']
+        widgets = {
+            'author': forms.Select(attrs={'class': 'mr-2'}),
+            'new_author': forms.TextInput(attrs={'class': 'flex-grow-1'}),
+            'category': forms.Select(attrs={'class': 'mr-2'}),
+            'new_category': forms.TextInput(attrs={'class': 'flex-grow-1'}),
+        }
+
+    def save(self, commit=True):
+        new_author_name = self.cleaned_data.get('new_author')
+        if new_author_name:
+            author, created = Author.objects.get_or_create(name=new_author_name)
+            self.instance.author = author
+
+        new_category_name = self.cleaned_data.get('new_category')
+        if new_category_name:
+            category, created = Category.objects.get_or_create(name=new_category_name)
+            self.instance.category = category
+
+        return super().save(commit=commit)
 
 
 class BookFilterForm(forms.Form):

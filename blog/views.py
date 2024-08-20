@@ -24,34 +24,12 @@ def edit_review(request, review_id):
     return render(request, 'blog/books/edit_reviews.html', {'form': form})
 
 
-
-
-
-
 def blog_about(request):
     return render(request, 'blog/books/about.html')
 
 
 def blog_contacts(request):
     return render(request, 'blog/books/contacts.html')
-
-
-@require_POST
-@login_required()
-def book_review(request, book_id):
-    book = get_object_or_404(Book,
-                             id=book_id
-                             )
-    review = None
-    form = ReviewForm(data=request.POST)
-
-    if form.is_valid():
-        review = form.save(commit=False)
-        review.user = request.user
-        review.book = book
-        review.save()
-
-    return render(request, 'blog/books/review.html', {'book': book, 'form': form, 'review': review})
 
 
 def book_list(request):
@@ -95,28 +73,66 @@ def book_detail(request, year, month, day, slug):
                              publish__day=day,
                              slug=slug)
     reviews = book.reviews.all()
-    form = ReviewForm()
 
-    return render(request,'blog/books/detail.html', {'book': book, 'reviews': reviews, 'form': form})
+    user_has_rated = False
+    if request.user.is_authenticated:
+        user_has_rated = reviews.filter(user=request.user, rating__gt=0).exists()
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.book = book
+
+            if user_has_rated:
+                review.rating = 0
+            review.save()
+            return redirect('blog:book_detail', year=year, month=month, day=day, slug=slug)
+    else:
+        form = ReviewForm()
+
+    return render(request,'blog/books/detail.html', {'book': book, 'reviews': reviews, 'form': form, 'user_has_rated': user_has_rated})
+
+
+@require_POST
+@login_required()
+def book_review(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    reviews = book.reviews.all()
+
+    user_has_rated = reviews.filter(user=request.user, rating__gt=0).exists()
+
+    form = ReviewForm(data=request.POST)
+
+    if form.is_valid():
+        review = form.save(commit=False)
+        review.user = request.user
+        review.book = book
+
+        if user_has_rated:
+            review.rating = 0
+        review.save()
+
+    return render(request, 'blog/books/review.html', {'book': book, 'form': form, 'reviews': reviews, 'user_has_rated': user_has_rated})
 
 
 @login_required()
 def book_add(request):
     if request.method == 'POST':
         form = AddBookForm(request.POST)
-
         if form.is_valid():
             book = form.save(commit=False)
+            book.added_by = request.user
 
             if not book.slug:
                 book.slug = slugify(book.title)
-            book.added_by = request.user
             book.save()
             return redirect('blog:book_list')
         else:
-            form.add_error(None, 'Wrong data!')
+            form.add_error(None, 'Invalid data!')
     else:
-        form = AddBookForm
+        form = AddBookForm()
 
     return render(request, 'blog/books/add_book.html', {'form': form})
 

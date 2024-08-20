@@ -3,7 +3,6 @@ from django.urls import reverse
 from accounts.models import CustomUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):

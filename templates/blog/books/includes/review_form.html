@@ -1,7 +1,20 @@
-{% if user.is_authenticated %}
-    <form action="{% url 'blog:book_review' book.id %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Review</button>
-    </form>
-{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+        {{ form.comment.label_tag }}<br>
+        {{ form.comment }}
+    </div>
+
+    {% if not user_has_rated %}
+        <div class="form-group">
+            {{ form.rating.label_tag }}<br>
+            {{ form.rating }}
+        </div>
+    {% else %}
+        <p>You have already rated this book.</p>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
