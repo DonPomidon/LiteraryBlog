@@ -1,3 +1,4 @@
+{% if user.is_authenticated %}
 <form method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
@@ -18,3 +19,4 @@
 
     <button type="submit" class="btn btn-primary">Submit Review</button>
 </form>
+{% endif %}

@@ -117,20 +117,15 @@ def book_review(request, book_id):
     return render(request, 'blog/books/review.html', {'book': book, 'form': form, 'reviews': reviews, 'user_has_rated': user_has_rated})
 
 
-@login_required()
+@login_required
 def book_add(request):
     if request.method == 'POST':
         form = AddBookForm(request.POST)
         if form.is_valid():
             book = form.save(commit=False)
             book.added_by = request.user
-
-            if not book.slug:
-                book.slug = slugify(book.title)
             book.save()
             return redirect('blog:book_list')
-        else:
-            form.add_error(None, 'Invalid data!')
     else:
         form = AddBookForm()
 

@@ -3,40 +3,61 @@
 {% block title %}{{ book.title }}{% endblock %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
+    <div class="container mt-5">
+        <h2 class="mb-4">Add new book</h2>
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
 
-        <div class="form-group">
-            {{ form.title.label_tag }}
-            {{ form.title }}
-        </div>
-
-        <div class="form-group">
-            {{ form.slug.label_tag }}
-            {{ form.slug }}
-        </div>
-
-        <div class="form-group">
-            <label>{{ form.author.label }} / New Author:</label><br>
-            <div class="d-flex">
-                {{ form.author }}
-                {{ form.new_author }}
+            <div class="form-group mb-3">
+                {{ form.title.label_tag }}
+                {{ form.title }}
             </div>
-        </div>
 
-        <div class="form-group">
-            <label>{{ form.category.label }} / New Category:</label><br>
-            <div class="d-flex">
-                {{ form.category }}
-                {{ form.new_category }}
+            <div class="form-group mb-3">
+                <label>{{ form.author.label }} / New Author:</label><br>
+                <div class="d-flex align-items-center">
+                    <div class="w-50">
+                        {{ form.author }}
+                    </div>
+                    <div class="w-50 ms-2">
+                        {{ form.new_author }}
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            {{ form.description.label_tag }}
-            {{ form.description }}
-        </div>
+            <div class="form-group mb-3">
+                <label>{{ form.category.label }} / New Category:</label><br>
+                <div class="d-flex align-items-center">
+                    <div class="w-50">
+                        {{ form.category }}
+                    </div>
+                    <div class="w-50 ms-2">
+                        {{ form.new_category }}
+                    </div>
+                </div>
+            </div>
 
-        <input type="submit" value="Confirm" class="btn btn-primary">
-    </form>
+            <div class="form-group mb-4">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+            </div>
+
+            <input type="submit" value="Confirm" class="btn btn-primary">
+
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </form>
+    </div>
 {% endblock %}

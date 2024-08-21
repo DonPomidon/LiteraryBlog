@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from accounts.models import CustomUser
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -22,9 +23,9 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique_for_date='publish', unique=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, blank=True, null=True)
     description = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     rating = models.FloatField(default=0, max_length=2)
     added_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_added_book')
     publish = models.DateTimeField(auto_now_add=True)
@@ -52,6 +53,18 @@ class Book(models.Model):
                              self.publish.month,
                              self.publish.day,
                              self.slug])
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            unique_slug = self.slug
+            counter = 1
+            while Book.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{self.slug}-{counter}"
+                counter += 1
+            self.slug = unique_slug
+
+        super().save(*args, **kwargs)
 
 
 class Review(models.Model):

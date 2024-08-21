@@ -1,4 +1,5 @@
 from django import forms
+from django.template.defaultfilters import slugify
 from .models import Review, Book, Author, Category
 
 
@@ -15,18 +16,27 @@ class EditReviewForm(forms.ModelForm):
 
 
 class AddBookForm(forms.ModelForm):
-    new_author = forms.CharField(max_length=100, required=False, label="New Author")
-    new_category = forms.CharField(max_length=100, required=False, label="New Category")
+    new_author = forms.CharField(required=False, label="New Author")
+    new_category = forms.CharField(required=False, label="New Category")
 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'description', 'category', 'new_author', 'new_category']
+        fields = ['title', 'author', 'new_author', 'category', 'new_category', 'description']
         widgets = {
-            'author': forms.Select(attrs={'class': 'mr-2'}),
-            'new_author': forms.TextInput(attrs={'class': 'flex-grow-1'}),
-            'category': forms.Select(attrs={'class': 'mr-2'}),
-            'new_category': forms.TextInput(attrs={'class': 'flex-grow-1'}),
+            'author': forms.Select(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        title = cleaned_data.get('title')
+        slug = cleaned_data.get('slug')
+
+        if not slug and title:
+            cleaned_data['slug'] = slugify(title)
+
+        return cleaned_data
 
     def save(self, commit=True):
         new_author_name = self.cleaned_data.get('new_author')
@@ -38,6 +48,10 @@ class AddBookForm(forms.ModelForm):
         if new_category_name:
             category, created = Category.objects.get_or_create(name=new_category_name)
             self.instance.category = category
+
+        # Handle slug
+        if not self.instance.slug:
+            self.instance.slug = slugify(self.instance.title)
 
         return super().save(commit=commit)
 
