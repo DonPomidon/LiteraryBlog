@@ -8,14 +8,11 @@
         {{ form.comment }}
     </div>
 
-    {% if not user_has_rated %}
-        <div class="form-group">
-            {{ form.rating.label_tag }}<br>
-            {{ form.rating }}
-        </div>
-    {% else %}
-        <p>You have already rated this book.</p>
-    {% endif %}
+
+    <div class="form-group">
+        {{ form.rating.label_tag }}<br>
+        {{ form.rating }}
+    </div>
 
     <button type="submit" class="btn btn-primary">Submit Review</button>
 </form>

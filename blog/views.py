@@ -74,25 +74,28 @@ def book_detail(request, year, month, day, slug):
                              slug=slug)
     reviews = book.reviews.all()
 
-    user_has_rated = False
+    initial_rating = None
     if request.user.is_authenticated:
-        user_has_rated = reviews.filter(user=request.user, rating__gt=0).exists()
+        existing_review = reviews.filter(user=request.user).first()
+        if existing_review:
+            initial_rating = existing_review.rating
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, initial_rating=initial_rating)
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user
             review.book = book
-
-            if user_has_rated:
-                review.rating = 0
             review.save()
             return redirect('blog:book_detail', year=year, month=month, day=day, slug=slug)
     else:
-        form = ReviewForm()
+        form = ReviewForm(initial_rating=initial_rating)
 
-    return render(request,'blog/books/detail.html', {'book': book, 'reviews': reviews, 'form': form, 'user_has_rated': user_has_rated})
+    return render(request, 'blog/books/detail.html', {
+        'book': book,
+        'reviews': reviews,
+        'form': form,
+    })
 
 
 @require_POST

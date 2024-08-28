@@ -8,6 +8,13 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ['comment', 'rating']
 
+    def __init__(self, *args, **kwargs):
+        initial_rating = kwargs.pop('initial_rating', None)
+        super().__init__(*args, **kwargs)
+
+        if initial_rating is not None:
+            self.fields['rating'].initial = initial_rating
+
 
 class EditReviewForm(forms.ModelForm):
     class Meta:
