@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import slugify
-from .models import Book, Review
+from .models import Book, Review, UserRating
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import ReviewForm, AddBookForm, BookFilterForm, EditReviewForm
+from .forms import AddBookForm, BookFilterForm, ReviewForm, UserRatingForm, EditReviewForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
@@ -67,34 +67,40 @@ def book_list(request):
 
 
 def book_detail(request, year, month, day, slug):
-    book = get_object_or_404(Book,
-                             publish__year=year,
-                             publish__month=month,
-                             publish__day=day,
-                             slug=slug)
+    book = get_object_or_404(Book, publish__year=year, publish__month=month, publish__day=day, slug=slug)
     reviews = book.reviews.all()
+    user_rating = None
 
-    initial_rating = None
     if request.user.is_authenticated:
-        existing_review = reviews.filter(user=request.user).first()
-        if existing_review:
-            initial_rating = existing_review.rating
+        user_rating = UserRating.objects.filter(user=request.user, book=book).first()
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST, initial_rating=initial_rating)
-        if form.is_valid():
-            review = form.save(commit=False)
+        review_form = ReviewForm(request.POST)
+        rating_form = UserRatingForm(request.POST, instance=user_rating)
+
+        if review_form.is_valid() and (not user_rating or rating_form.is_valid()):
+            review = review_form.save(commit=False)
             review.user = request.user
             review.book = book
             review.save()
+
+            if not user_rating:
+                rating = rating_form.save(commit=False)
+                rating.user = request.user
+                rating.book = book
+                rating.save()
+
             return redirect('blog:book_detail', year=year, month=month, day=day, slug=slug)
     else:
-        form = ReviewForm(initial_rating=initial_rating)
+        review_form = ReviewForm()
+        rating_form = UserRatingForm(initial={'rating': user_rating.rating if user_rating else None})
 
     return render(request, 'blog/books/detail.html', {
         'book': book,
         'reviews': reviews,
-        'form': form,
+        'review_form': review_form,
+        'rating_form': rating_form,
+        'user_rating': user_rating,
     })
 
 
@@ -104,7 +110,7 @@ def book_review(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     reviews = book.reviews.all()
 
-    user_has_rated = reviews.filter(user=request.user, rating__gt=0).exists()
+    user_rating = UserRating.objects.filter(user=request.user, book=book).first()
 
     form = ReviewForm(data=request.POST)
 
@@ -112,12 +118,19 @@ def book_review(request, book_id):
         review = form.save(commit=False)
         review.user = request.user
         review.book = book
-
-        if user_has_rated:
-            review.rating = 0
         review.save()
 
-    return render(request, 'blog/books/review.html', {'book': book, 'form': form, 'reviews': reviews, 'user_has_rated': user_has_rated})
+        rating_value = request.POST.get('rating')
+        if rating_value:
+            if user_rating:
+                user_rating.rating = rating_value
+                user_rating.save()
+            else:
+                UserRating.objects.create(user=request.user, book=book, rating=rating_value)
+
+        return redirect('blog:book_detail', year=book.publish.year, month=book.publish.month, day=book.publish.day, slug=book.slug)
+
+    return render(request, 'blog/books/review.html', {'book': book, 'form': form, 'reviews': reviews, 'user_rating': user_rating})
 
 
 @login_required

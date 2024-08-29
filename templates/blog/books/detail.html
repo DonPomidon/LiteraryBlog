@@ -8,7 +8,7 @@
         <p class="author">Author: {{ book.author.name }}</p>
         <p class="category">Category: {{ book.category.name }}</p>
         <p class="description">Description: {{ book.description }}</p>
-        <p class="rating">Rating: {{ book.rating }}</p>
+        <p class="rating">Rating: {{ book.user_rating.rating }}</p>
         <p class="date">Published: {{ book.publish|date:"F j, Y" }}</p>
         <p class="added_by">Added by: {{ book.added_by }}</p>
     </div>
@@ -20,7 +20,7 @@
                 <div class="review">
                     <p><strong>{{ review.user.username }}</strong> ({{ review.created|date:"F j, Y" }})</p>
                     <p>{{ review.comment|linebreaks }}</p>
-                    <p>Rating: {{ review.rating }}</p>
+                    <p>Rating: {{ user_rating.rating }}</p>
 
                     {% if user == review.user %}
                         <a href="{% url 'blog:edit_review' review.id %}">Edit</a>

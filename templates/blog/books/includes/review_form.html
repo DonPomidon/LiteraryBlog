@@ -4,15 +4,21 @@
     {{ form.non_field_errors }}
 
     <div class="form-group">
-        {{ form.comment.label_tag }}<br>
-        {{ form.comment }}
+        {{ review_form.comment.label_tag }}<br>
+        {{ review_form.comment }}
     </div>
 
-
-    <div class="form-group">
-        {{ form.rating.label_tag }}<br>
-        {{ form.rating }}
-    </div>
+    {% if user_rating %}
+        <div class="form-group">
+             <label for="id_rating">Your Rating: {{ user_rating.rating }}</label><br>
+             <input type="number" name="rating" value="{{ user_rating.rating }}" step="0.1" min="0.0" max="10.0" disabled>
+        </div>
+    {% else %}
+        <div class="form-group">
+             {{ rating_form.rating.label_tag }}<br>
+             {{ rating_form.rating }}
+        </div>
+    {% endif %}
 
     <button type="submit" class="btn btn-primary">Submit Review</button>
 </form>

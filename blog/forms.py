@@ -1,25 +1,25 @@
 from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.template.defaultfilters import slugify
-from .models import Review, Book, Author, Category
+from .models import Review, Book, Author, Category, UserRating
 
 
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['comment', 'rating']
+        fields = ['comment']
 
-    def __init__(self, *args, **kwargs):
-        initial_rating = kwargs.pop('initial_rating', None)
-        super().__init__(*args, **kwargs)
 
-        if initial_rating is not None:
-            self.fields['rating'].initial = initial_rating
+class UserRatingForm(forms.ModelForm):
+    class Meta:
+        model = UserRating
+        fields = ['rating']
 
 
 class EditReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['rating']
+        fields = ['comment']
 
 
 class AddBookForm(forms.ModelForm):
